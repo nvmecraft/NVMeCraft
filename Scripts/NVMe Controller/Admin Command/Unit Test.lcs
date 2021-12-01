@@ -1,0 +1,44 @@
+﻿NVMeDevice dev;
+Serilog.Core.Logger log;
+
+public int ScriptMain(int a, int b)
+{
+    dev = FromEngine.dev;
+    log = FromEngine.log;
+    
+    int qid = 1;
+    Console.WriteLine("QID {0}, SQ DB - {1}, CQ DB - {2}", qid, dev.SQyTDBL[qid].Value, dev.CQyHDBL[qid].Value);
+    
+    dev.SQyTDBL[qid].RingDoorBell += RangIoSqDoorBell;
+    
+    Console.WriteLine("SQ {0}", dev.SQ[1].QueueEntrys[0].OPC);
+    
+    while(true)
+    {
+        Thread.Sleep(1000);
+        if(FromEngine.ShouldQuit == true)
+            break;
+        
+        Console.WriteLine("A");
+    }
+    
+    return 0;
+}
+
+public void RangIoSqDoorBell(int nDb, int val, int issuedCmds)
+{
+#if false
+    if (InvokeRequired)
+    {
+        BeginInvoke((MethodInvoker)delegate
+        {
+            //lblIoSqDb.Text = val.ToString("X");
+            
+            Console.WriteLine("Ring DoorBell");
+        });
+    }
+#endif
+    Console.WriteLine("Ring DoorBell");
+
+    return;
+}

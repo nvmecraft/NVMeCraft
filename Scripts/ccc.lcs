@@ -1,0 +1,12 @@
+﻿NVMeDevice dev;
+Serilog.Core.Logger log;
+
+public int ScriptMain(int a, int b)
+{
+    log = FromEngine.log;
+    dev = FromEngine.dev;
+
+    dev.controllerRegs.CC.EN = 0;
+    
+    return a + b;
+}

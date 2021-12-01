@@ -1,0 +1,23 @@
+﻿NVMeDevice dev;
+Serilog.Core.Logger log;
+
+public int ScriptMain(int a, int b)
+{
+    dev = FromEngine.dev;
+    log = FromEngine.log;
+    
+    log.Information("CAP.DSTRD - CHECK");
+    
+    UInt64 DSTRD = dev.controllerRegs.CAP.DSTRD;
+    
+    log.Information("CAP.DSTRD - 0x{0:X2}, The stride is specified as {1} in bytes.", DSTRD, Math.Pow(2, (2 + DSTRD)));
+    
+    PassOrFail(DSTRD);
+   
+    return 0;
+}
+
+public void PassOrFail(UInt64 DSTRD)
+{
+    log.Information("CAP.DSTRD - END");
+}

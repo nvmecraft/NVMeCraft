@@ -1,0 +1,27 @@
+﻿NVMeDevice dev;
+Serilog.Core.Logger log;
+
+public int ScriptMain(int a, int b)
+{
+    dev = FromEngine.dev;
+    log = FromEngine.log;
+    
+    log.Information("CAP.CSS - CHECK");
+    
+    UInt64 CSS = dev.controllerRegs.CAP.CSS;
+    
+    log.Information("CAP.CSS - 0x{0:X2}", CSS);
+    
+    PassOrFail(CSS);
+   
+    return 0;
+}
+
+public void PassOrFail(UInt64 css)
+{
+
+    if((css & 0x01) == 1)
+        log.Information("CAP.CSS - PASS");
+    else
+        log.Information("CAP.CSS - FAIL");
+}

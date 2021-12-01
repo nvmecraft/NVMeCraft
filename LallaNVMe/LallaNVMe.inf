@@ -1,0 +1,95 @@
+;
+; LallaNVMe.inf
+;
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=LallaSoft
+ClassGuid={73117034-395D-4AA3-8507-148DA0E78949}
+Provider=%ManufacturerName%
+CatalogFile=LallaNVMe.cat
+DriverVer = 06/17/2021,1.26.34.404
+
+[DestinationDirs]
+DefaultDestDir = 12
+LallaNVMe_Device_CoInstaller_CopyFiles = 11
+
+; ================= Class section =====================
+
+[ClassInstall32]
+Addreg=LallaSoftClassReg
+
+[LallaSoftClassReg]
+HKR,,,0,%ClassName%
+;HKR,,Icon,,-5
+HKR,,Icon,,-10
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+LallaNVMe.sys  = 1,,
+;
+
+
+;*****************************************
+; Install Section
+;*****************************************
+
+[Manufacturer]
+%ManufacturerName%=Standard,NTamd64
+
+[Standard.NTamd64]
+%LallaNVMe.DeviceDesc%=LallaNVMe_Device, PCI\CC_010802
+
+[LallaNVMe_Device.NT]
+CopyFiles=Drivers_Dir
+
+[Drivers_Dir]
+LallaNVMe.sys
+
+;-------------- Service installation
+[LallaNVMe_Device.NT.Services]
+AddService = LallaNVMe,%SPSVCINST_ASSOCSERVICE%, LallaPci_Service_Inst
+
+; -------------- LallaNVMe driver install sections
+[LallaPci_Service_Inst]
+DisplayName    = %LallaNVMe.SVCDESC%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\LallaNVMe.sys
+
+
+;
+;--- LallaNVMe_Device Coinstaller installation ------
+;
+
+[LallaNVMe_Device.NT.CoInstallers]
+AddReg=LallaNVMe_Device_CoInstaller_AddReg
+CopyFiles=LallaNVMe_Device_CoInstaller_CopyFiles
+
+[LallaNVMe_Device_CoInstaller_AddReg]
+HKR, Interrupt Management, 0x00000010
+HKR, Interrupt Management\MessageSignaledInterruptProperties, 0x00000010
+HKR, Interrupt Management\MessageSignaledInterruptProperties, MSISupported, 0x10001, 1
+HKR, Interrupt Management\MessageSignaledInterruptProperties, MessageNumberLimit, 0x10001, 120
+
+
+[LallaNVMe_Device_CoInstaller_CopyFiles]
+;
+
+
+[LallaNVMe_Device.NT.Wdf]
+KmdfService =  LallaNVMe, LallaNVMe_wdfsect
+
+[LallaNVMe_wdfsect]
+KmdfLibraryVersion = 1.15
+
+[Strings]
+SPSVCINST_ASSOCSERVICE= 0x00000002
+ManufacturerName="Lalla Soft"
+ClassName="Lalla Soft"
+DiskName = "LallaNVMe Installation Disk"
+LallaNVMe.DeviceDesc = "LallaNVMe Device"
+LallaNVMe.SVCDESC = "LallaNVMe Service"

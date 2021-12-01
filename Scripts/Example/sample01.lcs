@@ -1,0 +1,32 @@
+﻿NVMeDevice dev;
+Serilog.Core.Logger log;
+
+public int ScriptMain(int a, int b)
+{
+    log = FromEngine.log;
+    dev = FromEngine.dev;
+    SubmissionQueue asq;
+    asq = dev.SubmissionQueues.Find(q => q.QId == 0);
+   
+    while(true) 
+    {
+
+        Console.WriteLine("{0:X2}", a);
+        
+        log.Information("{0:X2}", b);
+        log.Error("{0:X2}", b);
+        log.Warning("{0:X2}", b);
+        //FromEngine.log.Write("{0:X2}", b);
+        
+        Console.WriteLine(FromEngine.dev.ToString());
+        log.Information("{0:X2}", FromEngine.dev.controllerRegs.CAP.val);
+        
+        log.Information("asq QSize = {0:X2}", asq.QSize);
+        
+        Thread.Sleep(500);
+        
+        if(FromEngine.ShouldQuit == true)
+            break;
+    }
+    return a + b;
+}

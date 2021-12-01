@@ -1,0 +1,30 @@
+﻿NVMeDevice dev;
+Serilog.Core.Logger log;
+
+public int ScriptMain(int a, int b)
+{
+    dev = FromEngine.dev;
+    log = FromEngine.log;
+    
+    log.Information("CAP.AMS - Test Start");
+    
+    UInt64 CAP_AMS = dev.controllerRegs.CAP.AMS;
+    log.Information("CAP.AMS - 0x{0:X2}", CAP_AMS);
+    
+    switch(CAP_AMS)
+    {
+        case 0x00:
+            log.Information("CAP.AMS - Round Robin");
+            break;
+        case 0x01:
+            log.Information("CAP.AMS - Weighted Round Robin with Urgent Priority Class");
+            break;
+        case 0x02:
+            log.Information("CAP.AMS - Vendor Specific");
+            break;
+    }
+    
+    log.Information("CAP.AMS - Test Done");
+    
+    return 0;
+}

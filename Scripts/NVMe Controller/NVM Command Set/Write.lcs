@@ -1,0 +1,66 @@
+﻿NVMeDevice dev;
+Serilog.Core.Logger log;
+
+int iops = 0;
+
+public int ScriptMain(int a, int b)
+{
+    dev = FromEngine.dev;
+    log = FromEngine.log;
+    
+    if(dev.NVMeDeviceEnabled == false)
+    {
+        Console.WriteLine("NVMe Device is disabled.");
+        return 1;
+    }
+    if(dev.NVMeControllerEnabled == false)
+    {
+        Console.WriteLine("NVMe Controller is disabled.");
+        return 1;
+    }
+    
+    if(dev.NVMeAdminQueueReady == false)
+    {
+        Console.WriteLine("Admin Queue is not ready.");
+        return 1;
+    }
+
+    //dev.ResetIoQueueDataPointer(1);
+    WriteTest(1);
+    
+    return 0;
+}
+
+public void WriteTest(int q)
+{
+    int qid = q;
+    UInt32 nsId = 1;
+    UInt64 startLba = 0;
+    UInt16 nlb = 16;
+    byte[] data = new byte[nlb*512];
+    
+    IO_COMMAND_SQE ioSqe = BuildNvmWriteSqe(nsId, startLba, nlb);
+    DataPointer dp = new DataPointer(dev, nlb * 512, false);
+    data[0] = 0xff;
+    dp.SetData(data);
+
+    dev.SubmitIoCommand(qid, ioSqe, dp);
+}
+
+
+public IO_COMMAND_SQE BuildNvmWriteSqe(UInt32 nsId, UInt64 startingLba, UInt16 nlb)
+{
+    IO_COMMAND_SQE ioSqe = new IO_COMMAND_SQE();
+    ioSqe.ClearSqe();
+    
+    ioSqe.OPC = 0x01; //(byte)EnumIoOpcode.Write;
+    ioSqe.NSID = nsId;
+    ioSqe.CDW10 = (UInt32)startingLba;
+    ioSqe.CDW11 = (UInt32)(startingLba>>32);
+    
+    ioSqe.CDW12 &= 0xFFFF0000;
+    ioSqe.CDW12 |= (UInt32)(nlb - 1);
+    
+    return ioSqe;
+}
+

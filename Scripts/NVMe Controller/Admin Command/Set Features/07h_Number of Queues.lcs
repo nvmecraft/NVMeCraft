@@ -1,0 +1,34 @@
+﻿NVMeDevice dev;
+Serilog.Core.Logger log;
+
+public int ScriptMain(int a, int b)
+{
+    dev = FromEngine.dev;
+    log = FromEngine.log;
+    
+    ADMIN_COMMAND_SQE sqe = new ADMIN_COMMAND_SQE();
+    
+    UInt32 numQueues = 2;
+    UInt32 ncqr, nsqr;
+    ncqr = numQueues - 1;
+    nsqr = numQueues - 1;
+    
+    sqe.ClearSqe();
+    sqe.OPC = (byte)EnumAdminCdw0Opcode.Set_Features;
+    sqe.CDW10 = sqe.CDW10 | 0x07;    // Number of Queues
+    //sqe.CDW11 = 0x00010001;          // sq 16, cq 16
+    sqe.CDW11 = ncqr;
+    sqe.CDW11 <<= 16;
+    sqe.CDW11 += nsqr;
+    
+    string sqeHexString = sqe.ToString();
+    Console.WriteLine(sqeHexString);
+    
+    ErrorCode status = dev.SubmitAdminCommand(sqe, null);
+    if(status != ErrorCode.NVME_SUCCESS)
+    {
+        Console.WriteLine("Error");
+    }
+    
+    return 0;
+}

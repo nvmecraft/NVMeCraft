@@ -1,0 +1,41 @@
+﻿NVMeDevice dev;
+Serilog.Core.Logger log;
+
+byte[] data = new byte[4096*128]; 
+
+public int ScriptMain(int a, int b)
+{
+    log = FromEngine.log;
+    dev = FromEngine.dev;
+    
+    while(true)
+    {
+        _DataPointer dp = new _DataPointer("", 4096*129);
+        if(dp.Status == false)
+        {
+            break;
+        }
+        
+        Console.WriteLine("Prp1 - {0:X2}, Prp2 - {1:X2}, {2:X2}", dp.Prp1, dp.Prp2, dp.Prp1+4096);
+        
+        data[0] = 0xFF;
+        dp.SetData(data);
+        
+        
+        string strData = dp.ToString();
+        Console.WriteLine(strData);
+        //log.Information(strData);
+        
+        dp.Free();
+        Console.WriteLine("Prp1 - {0:X2}, Prp2 - {1:X2}", dp.Prp1, dp.Prp2);
+        
+        dp = null;
+        
+        //Thread.Sleep(0);
+        
+        if(FromEngine.ShouldQuit == true)
+            break;
+    }
+
+    return a + b;
+}

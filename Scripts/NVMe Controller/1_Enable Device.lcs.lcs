@@ -1,0 +1,20 @@
+﻿NVMeDevice dev;
+Serilog.Core.Logger log;
+
+public int ScriptMain(int a, int b)
+{
+    dev = FromEngine.dev;
+    log = FromEngine.log;
+    
+    bool bolDeviceEnabled = dev.NVMeDeviceEnabled;
+    Console.WriteLine("{0}", bolDeviceEnabled);
+    
+    System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+    
+    dev.SysRegs.CMD.ID = 1;
+    dev.SysRegs.CMD.BME = 1;
+    dev.SysRegs.CMD.MSE = 1;
+    dev.SysRegs.MSIXCAP.MXC.MXE = 1;
+    
+    return 0;
+}

@@ -1,0 +1,112 @@
+﻿NVMeDevice dev;
+Serilog.Core.Logger log;
+
+System.Diagnostics.Stopwatch sw = null;
+
+public int ScriptMain(int a, int b)
+{
+    dev = FromEngine.dev;
+    log = FromEngine.log;
+    
+    sw = new System.Diagnostics.Stopwatch();
+    
+    EnablePCIeDevice();
+    DisableNVMeController();
+    DisablePCIeDevice();
+    
+    Thread.Sleep(500);
+    
+    EnablePCIeDevice();
+    EnableNVMeController();
+    
+    return 0;
+}
+
+public void DisablePCIeDevice()
+{
+    dev.systemBusRegs.CMD.ID = 0;
+    dev.systemBusRegs.CMD.BME = 0;
+    dev.systemBusRegs.CMD.MSE = 0;
+    dev.systemBusRegs.MSIXCAP.MXC.MXE = 0;
+}
+
+public void EnablePCIeDevice()
+{
+    dev.systemBusRegs.CMD.ID = 1;
+    dev.systemBusRegs.CMD.BME = 1;
+    dev.systemBusRegs.CMD.MSE = 1;
+    dev.systemBusRegs.MSIXCAP.MXC.MXE = 1;
+}
+
+public void DisableNVMeController()
+{
+    UInt64 CAP_TO = dev.controllerRegs.CAP.TO;
+    
+    log.Information("CAP.TO - CC.EN = 0");
+    dev.controllerRegs.CC.EN = 0;;
+    sw.Start();
+    while(true)
+    {
+        Thread.Sleep(10);
+        if(dev.controllerRegs.CSTS.RDY == 0)
+        {
+            sw.Stop();
+            log.Information("CAP.TO - CSTS.RDY = 0, Elapsed Time is {0}", sw.ElapsedMilliseconds.ToString());
+            break;
+        }
+        
+        if(sw.ElapsedMilliseconds > (Int64)(CAP_TO * 500))
+        {
+            sw.Stop();
+            log.Information("CAP.TO - Timeout occured. {0}", sw.ElapsedMilliseconds.ToString());
+            break;
+        }
+    }
+    
+    dev.controllerRegs.AQA.val = 0;
+    dev.controllerRegs.ASQ.val = 0;
+    dev.controllerRegs.ACQ.val = 0;
+}
+
+public void EnableNVMeController()
+{
+    int ACQSize = 0x10;
+    int ASQSize = 0x10;
+    //3. AQA, ASQ, ACQ
+    dev.controllerRegs.AQA.ASQS = (UInt32)(ASQSize - 1);
+    dev.controllerRegs.AQA.ACQS = (UInt32)(ACQSize - 1);
+
+    var asqAddr = MemoryManager.AllocPermanentMemory(dev.BDFString(), ASQSize * 64, "Admin SQ");
+    dev.controllerRegs.ASQ.ASQB = asqAddr.Item1 >> 12;
+
+    var acqAddr = MemoryManager.AllocPermanentMemory(dev.BDFString(), ACQSize * 16, "Admin CQ");
+    dev.controllerRegs.ACQ.ACQB = acqAddr.Item1 >> 12;
+    
+    
+
+    UInt64 CAP_TO = dev.controllerRegs.CAP.TO;
+    
+    log.Information("CAP.TO - CC.EN = 0");
+    dev.controllerRegs.CC.IOSQES = 6;
+    dev.controllerRegs.CC.IOCQES = 4;
+    dev.controllerRegs.CC.EN = 1;;
+    
+    sw.Start();
+    while(true)
+    {
+        Thread.Sleep(10);
+        if(dev.controllerRegs.CSTS.RDY == 1)
+        {
+            sw.Stop();
+            log.Information("CSTS.RDY = 1, Elapsed Time is {0}", sw.ElapsedMilliseconds.ToString());
+            break;
+        }
+        
+        if(sw.ElapsedMilliseconds > (Int64)(CAP_TO * 500))
+        {
+            sw.Stop();
+            log.Information("CAP.TO - Timeout occured. {0}", sw.ElapsedMilliseconds.ToString());
+            break;
+        }
+    }
+}
