@@ -4,7 +4,7 @@
 ---------------------------------------------------------------------------------------------------------------------
 
 NVMeCraft is a NVMe user space tooling for windows.
-
+This is a portable executable program. You don't need to install. Pull whole files and execute "NVMeCraft.exe".
 
 
 <!--
