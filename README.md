@@ -1,6 +1,6 @@
-### Hi there 👋
+<!-- ### Hi there 👋 -->
 
-NVMeCraft Basic
+### NVMeCraft Basic
 
 <!--
 **nvmecraft/NVMeCraft** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
