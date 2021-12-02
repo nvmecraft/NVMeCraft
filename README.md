@@ -8,6 +8,12 @@ This is a portable executable program. You don't need to install. Pull whole fil
 ![image](https://user-images.githubusercontent.com/93704493/144341265-01c95bbd-8725-46bd-94ec-f26c5a805f34.png)
 
 ## Features
+ - Edit PCIe Header Registers
+ - Edit NVMe Controller Registers
+ - Read / Write NVMe Admin/Io Queues
+ - Support C# Script to access all NVMe resource.
+
+
 <!--
 **nvmecraft/NVMeCraft** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
 
