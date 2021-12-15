@@ -18,6 +18,9 @@ https://lallasoft.net/
  - Support C# Script to access all NVMe resource.
 
 
+## C# script
+ - To initiate and create admin queue pair, execute the "InitNVMeController.lcs" script.
+
 <!--
 **nvmecraft/NVMeCraft** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
 
