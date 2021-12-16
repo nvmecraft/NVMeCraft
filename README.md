@@ -11,6 +11,8 @@ Product Key(beta version) : 8K3Y-C8M7-YKYA-IB9D-4RKE-8W64-AITA
 
 https://lallasoft.net/
 
+The node(It has an icon) is an interactive node with double click.
+
 ![image](https://user-images.githubusercontent.com/93704493/146301866-91ce6392-2fe4-4674-8a4e-8d3cffb85408.png)
 
 Install "lallaNVMe" Driver to handle a NVMe device with C# Script.
