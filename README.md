@@ -18,6 +18,7 @@ https://lallasoft.net/
  - Edit NVMe Controller Registers
  - Read / Write NVMe Admin/Io Queues
  - Support C# Script to access all NVMe resource.
+ - Support Virtual Machine(recommand VMware).
 
 
 ## C# script
