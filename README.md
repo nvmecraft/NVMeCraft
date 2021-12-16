@@ -12,12 +12,6 @@ https://lallasoft.net/
 
 The node(has an icon) is an interactive node with double click.
 
-//
-
-Install "lallaNVMe" Driver to handle a NVMe device with C# Script.
-(https://lallasoft.net/install-lallanvme-device-driver/)
-
-
 ## Features
  - Edit PCIe Header Registers
  - Edit NVMe Controller Registers
@@ -27,6 +21,8 @@ Install "lallaNVMe" Driver to handle a NVMe device with C# Script.
 
 ## C# script
  - Use C# script with a NVMe device that is set by "LallaNVMe" driver.
+ - Install "lallaNVMe" Driver to handle a NVMe device with C# Script.
+   (https://lallasoft.net/install-lallanvme-device-driver/)
  - To initiate NVMe Device and create admin queue pair, execute the "InitNVMeController.lcs" script.
 
 ![image](https://user-images.githubusercontent.com/93704493/146317931-d6771bd9-171c-4704-965d-01229e6af22d.png)
