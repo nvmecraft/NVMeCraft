@@ -9,7 +9,7 @@ This is a portable executable program. You don't need to install. Pull whole fil
 
 Product Key(beta version) : 8K3Y-C8M7-YKYA-IB9D-4RKE-8W64-AITA
 
-The node(has an icon) is an interactive node with double click.
+The node(has an icon) is interactive by double click.
 
 https://lallasoft.net/
 
