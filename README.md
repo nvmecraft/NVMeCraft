@@ -24,7 +24,7 @@ https://lallasoft.net/
 
 ## C# script
  - Use C# script with a NVMe device that is set by "LallaNVMe" driver.
- - Install "lallaNVMe" Driver to handle a NVMe device with C# Script.
+ - Install "lallaNVMe" Driver and reboot to handle a NVMe device with C# Script.
    (https://lallasoft.net/install-lallanvme-device-driver/)
  - To initiate NVMe Device and create admin queue pair, execute the "InitNVMeController.lcs" script.
 
